@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <title>Stick Hero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="score"></div>
+        <div id="bestScore"></div>
+        <canvas id="game" width="375" height="375"></canvas>
+        <div id="introduction">Hold down the mouse to stretch out a stick</div>
+        <div id="perfect">DOUBLE SCORE</div>
+        <button id="restart">RESTART</button>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        const applySafeArea = () => {
+            const safeArea = window.Telegram.WebApp.safeAreaInset || { top: 0, bottom: 0, left: 0, right: 0 };
+            const header = document.getElementById('header');
+            const canvas = document.getElementById('canvas');
+            if (window.Telegram.WebApp.isFullscreen()) {
+                document.body.style.paddingTop = `${safeArea.top + 20}px`;
+                document.body.style.paddingLeft = `${safeArea.left - 10}px`;
+                document.body.style.paddingRight = `${safeArea.right - 10}px`;
+            }
+            // Apply safe area padding
+
+
+            // Adjust canvas size
+            canvas.width = window.innerWidth - safeArea.left - safeArea.right;
+            canvas.height = window.innerHeight - safeArea.top - safeArea.bottom - header.offsetHeight;
+        };
+
+        applySafeArea();
+
+        window.addEventListener('resize', applySafeArea);
+
+        window.Telegram.WebApp.requestFullscreen();
+        window.Telegram.WebApp.expand();
+    </script>
+</body>
+
+</html>
