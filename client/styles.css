@@ -1,0 +1,290 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    user-select: none;
+    /* Disable text selection for the whole page */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10+ */
+}
+
+canvas {
+    user-select: none;
+    /* Disable text selection for the canvas */
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#score {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 1em;
+    font-weight: 900;
+    text-align: center;
+}
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 2;
+    /* Initially hidden */
+}
+
+#bestScore {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    font-size: 1em;
+    font-weight: 900;
+    text-align: center;
+}
+
+#introduction {
+    display: none;
+    width: 200px;
+    height: 150px;
+    position: absolute;
+    font-weight: 600;
+    font-size: 0.8em;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    transition: opacity 2s;
+}
+
+
+
+#perfect {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 2s;
+}
+
+#gameStart {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    border-radius: 20px;
+    z-index: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#restart {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    border-radius: 20px;
+    z-index: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+
+#gameStart>div {
+    width: 200px;
+    height: 60px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#gameStart>div:hover {
+    background-color: #45a049;
+}
+
+#gameStart>div:active {
+    transform: scale(0.95);
+    background-color: #3d8b40;
+}
+
+#gameStart>div:first-child {
+    background-color: #2196F3;
+}
+
+#gameStart>div:first-child:hover {
+    background-color: #1E88E5;
+}
+
+#gameStart>div:first-child:active {
+    background-color: #1976D2;
+}
+
+
+#restart>div {
+    width: 200px;
+    height: 60px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+
+
+#restart>div:hover {
+    background-color: #45a049;
+}
+
+#restart a:active {
+    transform: scale(0.95);
+    background-color: #3d8b40;
+}
+
+#restart>div:first-child {
+    background-color: #2196F3;
+}
+
+#restart>div:first-child:hover {
+    background-color: #1E88E5;
+}
+
+#restart a:active {
+    background-color: #1976D2;
+}
+
+.no-style {
+    text-decoration: none;
+    /* Removes underline */
+
+    width: 200px;
+    height: 60px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#youtube,
+#youtube-card {
+    display: none;
+}
+
+@media (min-height: 425px) {
+
+    /** Youtube logo by https://codepen.io/alvaromontoro */
+    #youtube {
+        z-index: 2;
+        display: block;
+        width: 100px;
+        height: 70px;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: red;
+        border-radius: 50% / 11%;
+        transform: scale(0.8);
+        transition: transform 0.5s;
+    }
+
+    #youtube:hover,
+    #youtube:focus {
+        transform: scale(0.9);
+    }
+
+    #youtube::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 7.5%;
+        left: -6%;
+        width: 112%;
+        height: 85%;
+        background: red;
+        border-radius: 9% / 50%;
+    }
+
+    #youtube::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 40px;
+        width: 45px;
+        height: 30px;
+        border: 15px solid transparent;
+        box-sizing: border-box;
+        border-left: 30px solid white;
+    }
+
+    #youtube span {
+        font-size: 0;
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+
+    #youtube:hover+#youtube-card {
+        display: block;
+        position: absolute;
+        bottom: 12px;
+        left: 10px;
+        padding: 25px 25px 25px 130px;
+        width: 300px;
+        background-color: white;
+    }
+}

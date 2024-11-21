@@ -1,16 +1,5 @@
-/*
+import { getScore, setScore } from "./userScore";
 
-
-
-If you want to know how this game was made, check out this video, that explains how it's made: 
-
-https://youtu.be/eue3UdFvwPo
-
-Follow me on twitter for more: https://twitter.com/HunorBorbely
-
-*/
-
-// Extend the base functionality of JavaScript
 Array.prototype.last = function () {
   return this[this.length - 1];
 };
@@ -20,7 +9,8 @@ Math.sinus = function (degree) {
   return Math.sin((degree / 180) * Math.PI);
 };
 
-// Game data
+let firstLoad = true;
+
 let phase = "waiting"; // waiting | stretching | turning | walking | transitioning | falling
 let lastTimestamp; // The timestamp of the previous requestAnimationFrame cycle
 
@@ -37,8 +27,8 @@ let trees = [];
 let score = 0;
 let bestScore = 0;
 // Configuration
-const canvasWidth = 375;
-const canvasHeight = 375;
+const canvasWidth = window.innerWidth;
+const canvasHeight = window.innerHeight;
 const platformHeight = 100;
 const heroDistanceFromEdge = 10; // While waiting
 const paddingX = 100; // The waiting position of the hero in from the original canvas size
@@ -71,24 +61,36 @@ const ctx = canvas.getContext("2d");
 
 const introductionElement = document.getElementById("introduction");
 const perfectElement = document.getElementById("perfect");
-const restartButton = document.getElementById("restart");
+const restart = document.getElementById("restart");
+const restartButton = document.getElementById("restartButton");
 const scoreElement = document.getElementById("score");
 const bestScoreElement = document.getElementById("bestScore");
-
+const startElement = document.getElementById("start");
+const gameStartElement = document.getElementById("gameStart");
 // Initialize layout
 resetGame();
 
 // Resets game variables and layouts but does not start the game (game starts on keypress)
-function resetGame() {
+async function resetGame() {
+  if (firstLoad) {
+    document.getElementById("loading").style.display = "block";
+  }
+
   // Reset game progress
   phase = "waiting";
   lastTimestamp = undefined;
   sceneOffset = 0;
   score = 0;
-  bestScore = window.localStorage.getItem("bestScore") | 0;
+
+  bestScore = await getScore();
+  document.getElementById("introduction").style.display = "block";
+  document.getElementById("loading").style.display = "none";
+  if (firstLoad) {
+    document.getElementById("gameStart").style.display = "flex";
+  }
   introductionElement.style.opacity = 1;
   perfectElement.style.opacity = 0;
-  restartButton.style.display = "none";
+  restart.style.display = "none";
   scoreElement.innerHTML = `Score <br>${score}`;
   bestScoreElement.innerHTML = `Best Score <br>${bestScore}`;
 
@@ -161,30 +163,47 @@ function generatePlatform() {
 
 resetGame();
 
-// If space was pressed restart the game
-window.addEventListener("keydown", function (event) {
-  if (event.key == " ") {
-    event.preventDefault();
-    resetGame();
-    return;
-  }
-});
+function StartGame() {
+  gameStartElement.style.display = "none";
+  // If space was pressed restart the game
+  window.addEventListener("keydown", function (event) {
+    if (event.key == " ") {
+      event.preventDefault();
+      resetGame();
+      return;
+    }
+  });
 
-window.addEventListener("mousedown", function (event) {
-  if (phase == "waiting") {
-    lastTimestamp = undefined;
-    introductionElement.style.opacity = 0;
-    phase = "stretching";
-    window.requestAnimationFrame(animate);
-  }
-});
+  window.addEventListener("mousedown", function (event) {
+    if (phase == "waiting") {
+      lastTimestamp = undefined;
+      introductionElement.style.opacity = 0;
+      phase = "stretching";
+      window.requestAnimationFrame(animate);
+    }
+  });
 
-window.addEventListener("mouseup", function (event) {
-  if (phase == "stretching") {
-    phase = "turning";
-  }
-});
+  window.addEventListener("mouseup", function (event) {
+    if (phase == "stretching") {
+      phase = "turning";
+    }
+  });
+  // Replace mouse events with touch events
+  window.addEventListener("touchstart", function (event) {
+    if (phase === "waiting") {
+      lastTimestamp = undefined;
+      introductionElement.style.opacity = 0;
+      phase = "stretching";
+      window.requestAnimationFrame(animate);
+    }
+  });
 
+  window.addEventListener("touchend", function (event) {
+    if (phase === "stretching") {
+      phase = "turning";
+    }
+  });
+}
 window.addEventListener("resize", function (event) {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -273,6 +292,7 @@ function animate(timestamp) {
       break;
     }
     case "falling": {
+      firstLoad = false;
       if (sticks.last().rotation < 180)
         sticks.last().rotation += (timestamp - lastTimestamp) / turningSpeed;
 
@@ -281,10 +301,10 @@ function animate(timestamp) {
         platformHeight + 100 + (window.innerHeight - canvasHeight) / 2;
       if (heroY > maxHeroY) {
         if (score > bestScore) {
-          window.localStorage.setItem("bestScore", score);
+          setScore(score);
         }
 
-        restartButton.style.display = "block";
+        restart.style.display = "flex";
         return;
       }
       break;
@@ -346,7 +366,8 @@ function draw() {
 restartButton.addEventListener("click", function (event) {
   event.preventDefault();
   resetGame();
-  restartButton.style.display = "none";
+  firstLoad = false;
+  restart.style.display = "none";
 });
 
 function drawPlatforms() {
@@ -530,25 +551,14 @@ function getTreeY(x, baseHeight, amplitude) {
   const sineBaseY = window.innerHeight - baseHeight;
   return Math.sinus(x) * amplitude + sineBaseY;
 }
-// Replace mouse events with touch events
-window.addEventListener("touchstart", function (event) {
-  if (phase === "waiting") {
-    lastTimestamp = undefined;
-    introductionElement.style.opacity = 0;
-    phase = "stretching";
-    window.requestAnimationFrame(animate);
-  }
-});
-
-window.addEventListener("touchend", function (event) {
-  if (phase === "stretching") {
-    phase = "turning";
-  }
-});
 
 // Resize canvas on orientation change or window resize
 window.addEventListener("resize", function () {
-  canvas.width = Math.min(window.innerWidth, 375);
-  canvas.height = Math.min(window.innerHeight, 667);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   draw();
+});
+
+startElement.addEventListener("click", function () {
+  StartGame();
 });

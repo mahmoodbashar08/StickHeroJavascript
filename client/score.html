@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <title>Top Players</title>
+    <link rel="stylesheet" href="scoreStyles.css">
+</head>
+
+<body>
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="container" class="container">
+        <div
+            style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative; height: 100px;">
+            <h1 style="margin: 0;">Top Players</h1>
+        </div>
+
+        <div id="players-list">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+
+        <div id="players-list1">
+            <h1 style="margin: 0; padding: 0;">Your Rank</h1>
+            <!-- This will be updated dynamically -->
+        </div>
+    </div>
+    <script>
+        const backFunction = () => {
+            // Navigate to the desired page
+            window.location.href = "/index.html";
+        };
+
+        // Show the back button
+        window.Telegram.WebApp.BackButton.show();
+
+        // Attach the 'backButtonClicked' event listener
+        window.Telegram.WebApp.onEvent('backButtonClicked', backFunction);
+
+        // Handle when the user navigates back or closes the app
+        const handleReturn = () => {
+            // Hide the back button
+
+
+            // Remove the 'backButtonClicked' event listener
+            window.Telegram.WebApp.offEvent('backButtonClicked', backFunction);
+        };
+
+        // Listen for page unload or visibility change to clean up the back button
+        window.addEventListener('beforeunload', handleReturn);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                handleReturn();
+            }
+        });
+    </script>
+
+
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="score.js"></script>
+</body>
+
+</html>
